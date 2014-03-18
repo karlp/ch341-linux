@@ -1,0 +1,19 @@
+notes on adding parity control support to ch341.c, the linux driver for, 
+as BSD calls it, "the worst usb serial chip in the world"
+
+it actually works just fine in windows, and in linux with no-parity, at least
+for the basic usages I have for it, but yeah, it's ugly datasheet world :)
+
+http://wch-ic.com/product/usb/ch341.asp
+
+Now to just actually edit the kernel module...
+
+Enabling debug from the kernel module:
+sudo su -c 'echo "file ch341.c +p" > /sys/kernel/debug/dynamic_debug/control'
+
+Building it (from a linux tree checkout matching your running kernel on
+fedora...)
+make -C /lib/modules/`uname -r`/build M=`pwd`/drivers/usb/serial modules
+
+
+
