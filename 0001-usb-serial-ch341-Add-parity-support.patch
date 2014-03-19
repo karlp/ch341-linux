@@ -1,20 +1,27 @@
-From b9cc8f205b20aea1a6ced531a3af08c5dd219526 Mon Sep 17 00:00:00 2001
+From 826333457d90018641883265a672268e1b13ab93 Mon Sep 17 00:00:00 2001
 From: Karl Palsson <karlp@tweak.net.au>
 Date: Tue, 18 Mar 2014 23:33:27 +0000
 Subject: [PATCH] usb/serial/ch341: Add parity support
 
 Based on wireshark packet traces from a windows machine.
 
+ch340 and ch341 both seem to support all parity modes, but only the ch341
+appears to support variable data bits and variable stop bits, so those are left
+unimplemented, as before.
+
+Tested on a generic usb-rs485 dongle with the chip label scratched off, and
+some Modbus/RTU devices that required various parity settings.
+
 Signed-off-by: Karl Palsson <karlp@tweak.net.au>
 ---
- drivers/usb/serial/ch341.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/usb/serial/ch341.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/usb/serial/ch341.c b/drivers/usb/serial/ch341.c
-index c2a4171..456ddd0 100644
+index 82371f6..afd2ec4 100644
 --- a/drivers/usb/serial/ch341.c
 +++ b/drivers/usb/serial/ch341.c
-@@ -349,6 +349,7 @@ static void ch341_set_termios(struct tty_struct *tty,
+@@ -346,6 +346,7 @@ static void ch341_set_termios(struct tty_struct *tty,
  	struct ch341_private *priv = usb_get_serial_port_data(port);
  	unsigned baud_rate;
  	unsigned long flags;
@@ -22,20 +29,31 @@ index c2a4171..456ddd0 100644
  
  	baud_rate = tty_get_baud_rate(tty);
  
-@@ -369,9 +370,22 @@ static void ch341_set_termios(struct tty_struct *tty,
+@@ -366,9 +367,33 @@ static void ch341_set_termios(struct tty_struct *tty,
  
  	/* Unimplemented:
  	 * (cflag & CSIZE) : data bits [5, 8]
 -	 * (cflag & PARENB) : parity {NONE, EVEN, ODD}
  	 * (cflag & CSTOPB) : stop bits [1, 2]
  	 */
++	/* CH340 doesn't appear to support variable stop bits or data bits */
 +	if (C_PARENB(tty)) {
 +		if (C_PARODD(tty)) {
-+			dev_dbg(&port->dev, "parity = odd\n");
-+			par_flags = 0xcb;
++			if (tty->termios.c_cflag & CMSPAR) {
++				dev_dbg(&port->dev, "parity = mark\n");
++				par_flags = 0xeb;
++			} else {
++				dev_dbg(&port->dev, "parity = odd\n");
++				par_flags = 0xcb;
++			}
 +		} else {
-+			dev_dbg(&port->dev, "parity = even\n");
-+			par_flags = 0xdb;
++			if (tty->termios.c_cflag & CMSPAR) {
++				dev_dbg(&port->dev, "parity = space\n");
++				par_flags = 0xfb;
++			} else {
++				dev_dbg(&port->dev, "parity = even\n");
++				par_flags = 0xdb;
++			}
 +		}
 +	} else {
 +		dev_dbg(&port->dev, "parity = none\n");
