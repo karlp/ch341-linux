@@ -18,4 +18,8 @@ fedora...)
 make -C /lib/modules/`uname -r`/build M=`pwd`/drivers/usb/serial modules
 
 
-
+I have the YSUMA01-341A, plus what ever's inside the 485 dongle
+YSUMA01-341A  	http://item.taobao.com/item.htm?id=14541759710
+YS-CH341T	http://item.taobao.com/item.htm?id=16318219421
+YS-CH340T	http://item.taobao.com/item.htm?id=17164157198
+HL-340		http://item.taobao.com/item.htm?id=17786652096
