@@ -17,6 +17,16 @@ Building it (from a linux tree checkout matching your running kernel on
 fedora...)
 make -C /lib/modules/`uname -r`/build M=`pwd`/drivers/usb/serial modules
 
+(First time, to get that running kernel... notes to self...
+make mrproper
+cp /boot/config-xxxx .config
+make oldconfig
+make
+make modules
+sudo make modules_install
+sudo make install
+~reboot here~
+
 
 I have the YSUMA01-341A, plus what ever's inside the 485 dongle
 YSUMA01-341A  	http://item.taobao.com/item.htm?id=14541759710
