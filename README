@@ -33,3 +33,11 @@ YSUMA01-341A  	http://item.taobao.com/item.htm?id=14541759710
 YS-CH341T	http://item.taobao.com/item.htm?id=16318219421
 YS-CH340T	http://item.taobao.com/item.htm?id=17164157198
 HL-340		http://item.taobao.com/item.htm?id=17786652096
+
+~ TO GET VirtualBox working again ...
+yum install VirtualBox-kmodsrc
+cd "somewhere" && tar -xf /usr/share/VirtualBox-kmod-4.3.18/VirtualBox-kmod-4.3.18.tar.xz
+cd vboxdrv && make && sudo make install
+cd vboxnetflt && make && sudo make install
+cd vboxnetadp && make && sudo make install
+sudo systemctl restart systemd-modules-load.service
