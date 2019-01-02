@@ -1,3 +1,13 @@
+!!OBSOLETE!!
+
+Note, somone finally had the patience/pigheadedness to break down the lkml enough to actuallly
+allow a bugfix to this driver, and parity/flowcontrol/wordsize are now all properly supported since about 4.9/4.10, 
+with a bunch more little fixes and cleanups around the 4.10/4.11.  You shouldn't need any of this work anymore,
+nor should you need you need any other drivers for these parts.
+
+~~~~~ original notes below ~~~~~~
+
+
 notes on adding parity control support to ch341.c, the linux driver for, 
 as BSD calls it, "the worst usb serial chip in the world"
 
